@@ -1,6 +1,6 @@
 <script>
 	import { browser } from '$app/environment';
-	import 'simpledotcss';
+	import 'simpledotcss/simple.min.css';
 
 	let english = '';
 	let greenlandic = '';
@@ -70,43 +70,55 @@
 
 <svelte:head>
 	<title>Greenlandic to English Translator</title>
-	<description
-		>This tool translates between Greenlandic and English, using Danish as a proxy.</description
-	>
+	<meta
+		name="description"
+		content="This tool translates between Greenlandic and English, using Danish as a proxy."
+	/>
 </svelte:head>
 
-<h1>Greenlandic - English Translator</h1>
-<p>This works by calling on two services:</p>
-<ul>
-	<li><a href="https://nutserut.gl/en">Nutserut</a> (Greenlandic - Danish)</li>
-	<li>
-		<a href="https://translate.google.ca/?sl=da&tl=en&op=translate">Google Translate</a> (Danish - English)
-	</li>
-</ul>
-<p>
-	By using Danish as a proxy language, an approximate translation can be provided. This is
-	experimental and may break if the external services change.
-</p>
+<header>
+	<h1>Greenlandic - English Translator</h1>
+	<p style="text-align: left;">
+		This works by calling on two services: <a href="https://nutserut.gl/en" target="_blank"
+			>Nutserut</a
+		>
+		(Greenlandic - Danish) and
+		<a href="https://translate.google.ca/?sl=da&tl=en&op=translate" target="_blank"
+			>Google Translate</a
+		> (Danish - English). By using Danish as a proxy language, an approximate translation can be provided.
+		This is experimental and may break if the external services change.
+	</p>
+</header>
 
-<section
-	style="--english:{fromEnglish ? 'input' : 'result'}; --greenlandic:{fromEnglish
-		? 'result'
-		: 'input'};"
->
-	<div id="greenlandic">
-		<label for="greenlandic">Greenlandic</label>
-		<textarea bind:value={greenlandic} disabled={fromEnglish} name="Greenlandic" rows="10" />
-	</div>
-	<div id="controls">
-		<button on:click={() => translate(fromEnglish ? english : greenlandic)}>Translate</button>
-		<button on:click={switchLanguage}>Switch Language</button>
-	</div>
-	<div id="english">
-		<label for="english">English</label>
-		<textarea bind:value={english} disabled={!fromEnglish} name="English" rows="10" />
-	</div>
-	<button on:click={copy(fromEnglish ? greenlandic : english)}>Copy Result to Clipboard</button>
-</section>
+<main>
+	<section
+		style="--english:{fromEnglish ? 'input' : 'result'}; --greenlandic:{fromEnglish
+			? 'result'
+			: 'input'};"
+	>
+		<div id="greenlandic">
+			<label for="greenlandic">Greenlandic</label>
+			<textarea bind:value={greenlandic} disabled={fromEnglish} name="Greenlandic" rows="10" />
+		</div>
+		<div id="controls">
+			<button on:click={() => translate(fromEnglish ? english : greenlandic)}>Translate</button>
+			<button on:click={switchLanguage}>Switch Language</button>
+		</div>
+		<div id="english">
+			<label for="english">English</label>
+			<textarea bind:value={english} disabled={!fromEnglish} name="English" rows="10" />
+		</div>
+		<button on:click={() => copy(fromEnglish ? greenlandic : english)}
+			>Copy Result to Clipboard</button
+		>
+	</section>
+</main>
+
+<footer>
+	This is a simple tool built by Ben Ingham. It is not affiliated with any government or
+	organization. You can find the source code on
+	<a href="https://github.com/benaltair/greenlandic-english">Github</a>.
+</footer>
 
 <style>
 	section {
