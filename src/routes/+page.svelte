@@ -60,6 +60,13 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Greenlandic to English Translator</title>
+	<description
+		>This tool translates between Greenlandic and English, using Danish as a proxy.</description
+	>
+</svelte:head>
+
 <h1>Greenlandic - English Translator</h1>
 <p>This works by calling on two services:</p>
 <ul>
@@ -68,7 +75,10 @@
 		<a href="https://translate.google.ca/?sl=da&tl=en&op=translate">Google Translate</a> (Danish - English)
 	</li>
 </ul>
-<p>This is experimental and may break if the external services change.</p>
+<p>
+	By using Danish as a proxy language, an approximate translation can be provided. This is
+	experimental and may break if the external services change.
+</p>
 
 <section
 	style="--english:{fromEnglish ? 'input' : 'result'}; --greenlandic:{fromEnglish
