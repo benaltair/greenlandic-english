@@ -1,18 +1,8 @@
-# create-svelte
+# English - Greenlandic Translator
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+This is a simple translator that translates English to Greenlandic and Greenlandic to English. It pulls directly from [Nutserut](https://nutserut.gl/en), a service from [The Language Secretariat of Greenland](https://oqaasileriffik.gl/en/). Using Danish as a proxy language, it then pulls from the [Google Translate API](https://cloud.google.com/translate/docs/) to deliver an English translation, and vice versa.
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+To distribute this service widely, consultation would be needed with the Language Secretariat of Greenland to ensure that their server is not abused. This is a proof of concept, and is not intended to be used in production.
 
 ## Developing
 
@@ -27,7 +17,7 @@ npm run dev -- --open
 
 ## Building
 
-To create a production version of your app:
+To create a production version of this app:
 
 ```bash
 npm run build
