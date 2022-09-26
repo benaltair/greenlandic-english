@@ -1,4 +1,5 @@
 <script>
+	import { browser } from '$app/environment';
 	import 'simpledotcss';
 
 	let english = '';
@@ -14,6 +15,13 @@
 		// 	greenlandic = '';
 		// }
 		fromEnglish = !fromEnglish;
+	}
+
+	/**
+	 * @param {string} text
+	 */
+	function copy(text) {
+		if (browser) navigator.clipboard.writeText(text);
 	}
 
 	/**
@@ -97,7 +105,7 @@
 		<label for="english">English</label>
 		<textarea bind:value={english} disabled={!fromEnglish} name="English" rows="10" />
 	</div>
-	<button disabled>Copy Result to Clipboard</button>
+	<button on:click={copy(fromEnglish ? greenlandic : english)}>Copy Result to Clipboard</button>
 </section>
 
 <style>
