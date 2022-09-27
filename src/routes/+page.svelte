@@ -9,11 +9,11 @@
 
 	function switchLanguage() {
 		// Clear the input field
-		// if (fromEnglish) {
-		// 	english = '';
-		// } else if (!fromEnglish) {
-		// 	greenlandic = '';
-		// }
+		if (fromEnglish) {
+			english = '';
+		} else if (!fromEnglish) {
+			greenlandic = '';
+		}
 		fromEnglish = !fromEnglish;
 	}
 
