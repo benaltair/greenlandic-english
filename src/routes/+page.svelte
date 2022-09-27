@@ -142,7 +142,7 @@
 			>Copy Result to Clipboard</button
 		>
 	</section>
-	<p style="text-align: left;">
+	<p>
 		This tool works by calling on two services: <a href="https://nutserut.gl/en" target="_blank"
 			>Nutserut</a
 		>
