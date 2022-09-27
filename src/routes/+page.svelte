@@ -1,6 +1,7 @@
 <script>
 	import { browser } from '$app/environment';
 	import 'simpledotcss/simple.min.css';
+	import socialImage from '$lib/images/social.jpg';
 
 	let english = '';
 	let greenlandic = '';
@@ -50,7 +51,6 @@
 					let withoutBreaks = t?.output.replace(/\n\n\n\n\n/gm, '');
 					console.log({ t, minimizeBreaks: withoutBreaks });
 					return withoutBreaks;
-
 				} else if (!fromEnglish) {
 					return t?.moved;
 				}
@@ -92,6 +92,8 @@
 		name="description"
 		content="This tool translates between Greenlandic and English, using Danish as a proxy."
 	/>
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="og:image" content={socialImage} />
 </svelte:head>
 
 <header>
