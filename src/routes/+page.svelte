@@ -148,7 +148,7 @@
 </main>
 
 <footer>
-	This is a simple tool built by Ben Ingham. It is not affiliated with any government or
+	This is a simple tool built by Ben Ingham in September 2022. It is not affiliated with any government or
 	organization. You can find the source code on
 	<a href="https://github.com/benaltair/greenlandic-english">Github</a>.
 </footer>
