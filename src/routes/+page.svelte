@@ -47,7 +47,10 @@
 			.then((r) => r.json())
 			.then((t) => {
 				if (fromEnglish) {
-					return t?.output;
+					let withoutBreaks = t?.output.replace(/\n\n\n\n\n/gm, '');
+					console.log({ t, minimizeBreaks: withoutBreaks });
+					return withoutBreaks;
+
 				} else if (!fromEnglish) {
 					return t?.moved;
 				}
