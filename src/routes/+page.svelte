@@ -64,7 +64,22 @@
 			}&tl=${fromEnglish ? 'da' : 'en'}&dt=t&q=${text}`
 		)
 			.then((response) => response.json())
-			.then((data) => data[0][0][0]);
+			.then((data) => parseGoogleTranslate(data[0]));
+	}
+
+	/**
+	 * @param {any[]} response
+	 * @returns {string}
+	 */
+	function parseGoogleTranslate(response) {
+		/**
+		 * @type {string[]}
+		 */
+		let sentences = [];
+		response.map((/** @type {string[]} */ i) => {
+			if (i[0] !== null) sentences.push(i[0]);
+		});
+		return sentences.join('');
 	}
 </script>
 
