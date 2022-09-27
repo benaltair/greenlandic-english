@@ -112,16 +112,29 @@
 			: 'input'};"
 	>
 		<div id="greenlandic">
-			<label for="greenlandic">Greenlandic</label>
-			<textarea bind:value={greenlandic} disabled={fromEnglish} name="Greenlandic" rows="10" />
+			<label for="greenlandic-input">Greenlandic</label>
+			<textarea
+				bind:value={greenlandic}
+				disabled={fromEnglish}
+				id="greenlandic-input"
+				name="Greenlandic"
+				rows="10"
+				spellcheck="false"
+			/>
 		</div>
 		<div id="controls">
 			<button on:click={() => translate(fromEnglish ? english : greenlandic)}>Translate</button>
 			<button on:click={switchLanguage}>Switch Language</button>
 		</div>
 		<div id="english">
-			<label for="english">English</label>
-			<textarea bind:value={english} disabled={!fromEnglish} name="English" rows="10" />
+			<label for="english-input">English</label>
+			<textarea
+				bind:value={english}
+				disabled={!fromEnglish}
+				id="english-input"
+				name="English"
+				rows="10"
+			/>
 		</div>
 		<button on:click={() => copy(fromEnglish ? greenlandic : english)}
 			>Copy Result to Clipboard</button
