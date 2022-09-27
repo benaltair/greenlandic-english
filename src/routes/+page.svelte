@@ -116,7 +116,7 @@
 				disabled={fromEnglish}
 				id="greenlandic-input"
 				name="Greenlandic"
-				rows="10"
+				rows="5"
 				spellcheck="false"
 			/>
 		</div>
@@ -131,7 +131,7 @@
 				disabled={!fromEnglish}
 				id="english-input"
 				name="English"
-				rows="10"
+				rows="5"
 			/>
 		</div>
 		<button on:click={() => copy(fromEnglish ? greenlandic : english)}
