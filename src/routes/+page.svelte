@@ -98,15 +98,8 @@
 		/></svg
 	>
 	<h1>Greenlandic - English Translator</h1>
-	<p style="text-align: left;">
-		This works by calling on two services: <a href="https://nutserut.gl/en" target="_blank"
-			>Nutserut</a
-		>
-		(Greenlandic - Danish) and
-		<a href="https://translate.google.ca/?sl=da&tl=en&op=translate" target="_blank"
-			>Google Translate</a
-		> (Danish - English). By using Danish as a proxy language, an approximate translation can be provided.
-		This is experimental and may break if the external services change.
+	<p>
+		Begin by entering words and simple phrases, then press the <strong>Translate</strong> button.
 	</p>
 </header>
 
@@ -117,7 +110,7 @@
 			: 'input'};"
 	>
 		<div id="greenlandic">
-			<label for="greenlandic-input">Greenlandic</label>
+			<label for="greenlandic-input">kalaallisut (Greenlandic)</label>
 			<textarea
 				bind:value={greenlandic}
 				disabled={fromEnglish}
@@ -129,7 +122,7 @@
 		</div>
 		<div id="controls">
 			<button on:click={() => translate(fromEnglish ? english : greenlandic)}>Translate</button>
-			<button on:click={switchLanguage}>Switch Language</button>
+			<button class="subtle" on:click={switchLanguage}>Switch Language</button>
 		</div>
 		<div id="english">
 			<label for="english-input">English</label>
@@ -145,11 +138,24 @@
 			>Copy Result to Clipboard</button
 		>
 	</section>
+	<p style="text-align: left;">
+		This tool works by calling on two services: <a href="https://nutserut.gl/en" target="_blank"
+			>Nutserut</a
+		>
+		(Greenlandic - Danish) and
+		<a href="https://translate.google.ca/?sl=da&tl=en&op=translate" target="_blank"
+			>Google Translate</a
+		> (Danish - English). By using Danish as a proxy language, an approximate translation can be provided.
+		This is experimental and may break if the external services change. It currently works best with
+		words and simple phrases, as the underlying translation service is still being developed. Specifically,
+		this tool translates between English and West Greenlandic (kalaallisut, the official language of
+		Greenland) and vice versa.
+	</p>
 </main>
 
 <footer>
-	This is a simple tool built by Ben Ingham in September 2022. It is not affiliated with any government or
-	organization. You can find the source code on
+	This is a simple tool built by Ben Ingham in September 2022. It is not affiliated with any
+	government or organization. You can find the source code on
 	<a href="https://github.com/benaltair/greenlandic-english">Github</a>.
 </footer>
 
@@ -176,5 +182,10 @@
 	}
 	#english {
 		grid-area: var(--english);
+	}
+	button.subtle {
+		background-color: var(--text);
+		color: var(--bg);
+		opacity: 0.9;
 	}
 </style>
