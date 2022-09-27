@@ -105,6 +105,7 @@
 
 <main>
 	<section
+		class:fromEnglish
 		style="--english:{fromEnglish ? 'input' : 'result'}; --greenlandic:{fromEnglish
 			? 'result'
 			: 'input'};"
@@ -173,6 +174,10 @@
 			'controls'
 			'result'
 			'copy';
+	}
+	section.fromEnglish {
+		--greenlandic: result;
+		--english: input;
 	}
 	#controls {
 		grid-area: controls;
