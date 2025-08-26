@@ -4,6 +4,12 @@ This is a simple translator that translates English to Greenlandic and Greenland
 
 To distribute this service widely, consultation would be needed with the Language Secretariat of Greenland to ensure that their server is not abused. This is a proof of concept, and is not intended to be used in production.
 
+## Notes on translation
+
+- The app calls the public `translate.googleapis.com` endpoint from the browser; no API key is used. Reliability and rate limits may vary.
+- Danish is used as a pivot language between Greenlandic and English.
+- No server-side persistence; requests are issued directly from the client. Be mindful of CORS and upstream availability.
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
@@ -25,4 +31,4 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment. This project currently uses `adapter-auto`.
