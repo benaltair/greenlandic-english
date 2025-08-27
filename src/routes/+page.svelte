@@ -4,10 +4,12 @@
 	import socialImage from '$lib/images/social.jpg';
 
 	let english = '';
+	let danish = '';
 	let greenlandic = '';
 
 	let fromEnglish = true;
 	let loading = false;
+	let status = '';
 
 	function switchLanguage() {
 		// Clear the input field
@@ -16,6 +18,7 @@
 		} else if (!fromEnglish) {
 			greenlandic = '';
 		}
+		danish = '';
 		fromEnglish = !fromEnglish;
 	}
 
@@ -31,16 +34,21 @@
 	 */
 	async function translate(text) {
 		loading = true;
+		danish = '';
+		status = fromEnglish ? 'Translating English to Danish…' : 'Translating Greenlandic to Danish…';
 		try {
 			if (fromEnglish) {
-				const danish = await translateDanish(text);
+				danish = await translateDanish(text);
+				status = 'Translating Danish to Greenlandic…';
 				greenlandic = await translateGreenlandicHybrid(danish, 'dan2kal');
 			} else {
-				const danish = await translateGreenlandicHybrid(text, 'kal2dan');
+				danish = await translateGreenlandicHybrid(text, 'kal2dan');
+				status = 'Translating Danish to English…';
 				english = await translateDanish(danish);
 			}
 		} finally {
 			loading = false;
+			status = '';
 		}
 	}
 
@@ -151,8 +159,19 @@
 			</button>
 			<button class="subtle" on:click={switchLanguage} disabled={loading}>Switch Language</button>
 			{#if loading}
-				<span class="loading">Translating…</span>
+				<span class="loading">{status}</span>
 			{/if}
+		</div>
+		<div id="danish">
+			<label for="danish-output">dansk (Danish)</label>
+			<textarea
+				bind:value={danish}
+				disabled
+				id="danish-output"
+				name="Danish"
+				rows="5"
+				spellcheck="false"
+			/>
 		</div>
 		<div id="english">
 			<label for="english-input">English</label>
@@ -164,7 +183,7 @@
 				rows="5"
 			/>
 		</div>
-		<button on:click={() => copy(fromEnglish ? greenlandic : english)}
+		<button id="copy" on:click={() => copy(fromEnglish ? greenlandic : english)}
 			>Copy Result to Clipboard</button
 		>
 	</section>
@@ -197,10 +216,11 @@
 	section {
 		display: grid;
 		grid-template-columns: 1fr;
-		grid-template-rows: 1fr auto 1fr;
+		grid-template-rows: 1fr auto 1fr 1fr auto;
 		grid-template-areas:
 			'input'
 			'controls'
+			'danish'
 			'result'
 			'copy';
 	}
@@ -214,8 +234,14 @@
 	#greenlandic {
 		grid-area: var(--greenlandic);
 	}
+	#danish {
+		grid-area: danish;
+	}
 	#english {
 		grid-area: var(--english);
+	}
+	#copy {
+		grid-area: copy;
 	}
 	button.subtle {
 		background-color: var(--text);
