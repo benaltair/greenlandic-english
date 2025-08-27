@@ -9,7 +9,8 @@
 
 	let fromEnglish = true;
 	let loading = false;
-	let status = '';
+	/** @type {string[]} */
+	let progress = [];
 
 	function switchLanguage() {
 		// Clear the input field
@@ -35,20 +36,25 @@
 	async function translate(text) {
 		loading = true;
 		danish = '';
-		status = fromEnglish ? 'Translating English to Danish…' : 'Translating Greenlandic to Danish…';
+		progress = [
+			fromEnglish ? '1/2 Translating English to Danish…' : '1/2 Translating Greenlandic to Danish…'
+		];
 		try {
 			if (fromEnglish) {
 				danish = await translateDanish(text);
-				status = 'Translating Danish to Greenlandic…';
+				progress[0] = '1/2 English to Danish ✓';
+				progress.push('2/2 Translating Danish to Greenlandic…');
 				greenlandic = await translateGreenlandicHybrid(danish, 'dan2kal');
+				progress[1] = '2/2 Danish to Greenlandic ✓';
 			} else {
 				danish = await translateGreenlandicHybrid(text, 'kal2dan');
-				status = 'Translating Danish to English…';
+				progress[0] = '1/2 Greenlandic to Danish ✓';
+				progress.push('2/2 Translating Danish to English…');
 				english = await translateDanish(danish);
+				progress[1] = '2/2 Danish to English ✓';
 			}
 		} finally {
 			loading = false;
-			status = '';
 		}
 	}
 
@@ -131,7 +137,9 @@
 	>
 	<h1>Greenlandic - English Translator</h1>
 	<p>
-		Begin by entering words and simple phrases, then press the <strong>Translate</strong> button.
+		Begin by entering words and simple phrases, then press the <strong>Translate</strong> button. The
+		translation moves through Danish as an intermediary; the Danish result and step‑by‑step status messages
+		will appear below while the request is processed.
 	</p>
 </header>
 
@@ -158,8 +166,12 @@
 				Translate
 			</button>
 			<button class="subtle" on:click={switchLanguage} disabled={loading}>Switch Language</button>
-			{#if loading}
-				<span class="loading">{status}</span>
+			{#if progress.length}
+				<ul class="loading">
+					{#each progress as step}
+						<li>{step}</li>
+					{/each}
+				</ul>
 			{/if}
 		</div>
 		<div id="danish">
@@ -191,10 +203,10 @@
 		This tool works by calling on two services: <a href="https://nutserut.gl/en" target="_blank"
 			>Nutserut</a
 		>
-		(Greenlandic - Danish) and
+		(Greenlandic - Danish via its hybrid endpoint) and
 		<a href="https://translate.google.ca/?sl=da&tl=en&op=translate" target="_blank"
 			>Google Translate</a
-		> (Danish - English). By using Danish as a proxy language, an approximate translation can be provided.
+		> (Danish - English). The Danish intermediary text and status list above show each stage for transparency.
 		This is experimental and may break if the external services change. It currently works best with
 		words and simple phrases, as the underlying translation service is still being developed. Specifically,
 		this tool translates between English and West Greenlandic (kalaallisut, the official language of
@@ -250,5 +262,7 @@
 	}
 	.loading {
 		margin-left: 1em;
+		list-style: none;
+		padding-left: 1em;
 	}
 </style>

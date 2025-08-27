@@ -1,6 +1,6 @@
 # English - Greenlandic Translator
 
-This is a simple translator that translates English to Greenlandic and Greenlandic to English. It pulls directly from [Nutserut](https://nutserut.gl/en), a service from [The Language Secretariat of Greenland](https://oqaasileriffik.gl/en/). Using Danish as a proxy language, it then pulls from the [Google Translate API](https://cloud.google.com/translate/docs/) to deliver an English translation, and vice versa.
+This is a simple translator that translates English to Greenlandic and Greenlandic to English. It pulls directly from [Nutserut](https://nutserut.gl/en), a service from [The Language Secretariat of Greenland](https://oqaasileriffik.gl/en/). Using Danish as a proxy language, it then pulls from the [Google Translate API](https://cloud.google.com/translate/docs/) to deliver an English translation, and vice versa. The application now targets Nutserut's **hybrid** endpoint while preserving the legacy method internally for future toggling. The intermediate Danish text and step-by-step status messages are surfaced in the UI to show each stage of the translation process.
 
 To distribute this service widely, consultation would be needed with the Language Secretariat of Greenland to ensure that their server is not abused. This is a proof of concept, and is not intended to be used in production.
 
@@ -8,6 +8,7 @@ To distribute this service widely, consultation would be needed with the Languag
 
 - The app calls the public `translate.googleapis.com` endpoint from the browser; no API key is used. Reliability and rate limits may vary.
 - Danish is used as a pivot language between Greenlandic and English.
+- Nutserut's hybrid endpoint is used for Greenlandic-Danish conversion; the classic endpoint remains available in the code for experimentation.
 - No server-side persistence; requests are issued directly from the client. Be mindful of CORS and upstream availability.
 
 ## Developing
