@@ -30,31 +30,41 @@
 	 */
 	function translate(text) {
 		if (fromEnglish) {
-			translateDanish(text).then((r) => translateGreenlandic(r).then((r) => (greenlandic = r)));
-		} else if (!fromEnglish) {
-			translateGreenlandic(text).then((r) => translateDanish(r).then((r) => (english = r)));
+			translateDanish(text).then((r) =>
+				translateGreenlandicClassic(r, 'dan2kal').then((r) => (greenlandic = r))
+			);
+		} else {
+			translateGreenlandicHybrid(text).then((r) => translateDanish(r).then((r) => (english = r)));
 		}
 	}
 
 	/**
+	 * Legacy Nutserut translation.
 	 * @param {string} text
+	 * @param {'kal2dan' | 'dan2kal'} direction
 	 */
-	function translateGreenlandic(text) {
-		return fetch(
-			`https://nutserut.gl/callback.php?a=${fromEnglish ? 'dan2kal' : 'kal2qdx'}&t=${encodeURI(
-				text
-			)}`
-		)
+	function translateGreenlandicClassic(text, direction) {
+		const action = direction === 'dan2kal' ? 'dan2kal' : 'kal2qdx';
+		return fetch(`https://nutserut.gl/callback.php?a=${action}&t=${encodeURIComponent(text)}`)
 			.then((r) => r.json())
 			.then((t) => {
-				if (fromEnglish) {
-					let withoutBreaks = t?.output.replace(/\n\n\n\n\n/gm, '');
-					console.log({ t, minimizeBreaks: withoutBreaks });
+				if (direction === 'dan2kal') {
+					let withoutBreaks = t?.output?.replace(/\n\n\n\n\n/gm, '');
 					return withoutBreaks;
-				} else if (!fromEnglish) {
-					return t?.moved;
+				} else {
+					return t?.moved ?? t?.output;
 				}
 			});
+	}
+
+	/**
+	 * Hybrid Nutserut translation (Greenlandic to Danish).
+	 * @param {string} text
+	 */
+	function translateGreenlandicHybrid(text) {
+		return fetch(`https://nutserut.gl/callback.php?a=h-kal2dan&t=${encodeURIComponent(text)}`)
+			.then((r) => r.json())
+			.then((t) => t?.output);
 	}
 
 	/**
