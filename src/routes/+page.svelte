@@ -4,9 +4,12 @@
 	import socialImage from '$lib/images/social.jpg';
 
 	let english = '';
+	let danish = '';
 	let greenlandic = '';
 
 	let fromEnglish = true;
+	let loading = false;
+	let status = '';
 
 	function switchLanguage() {
 		// Clear the input field
@@ -15,6 +18,7 @@
 		} else if (!fromEnglish) {
 			greenlandic = '';
 		}
+		danish = '';
 		fromEnglish = !fromEnglish;
 	}
 
@@ -28,33 +32,56 @@
 	/**
 	 * @param {string} text
 	 */
-	function translate(text) {
-		if (fromEnglish) {
-			translateDanish(text).then((r) => translateGreenlandic(r).then((r) => (greenlandic = r)));
-		} else if (!fromEnglish) {
-			translateGreenlandic(text).then((r) => translateDanish(r).then((r) => (english = r)));
+	async function translate(text) {
+		loading = true;
+		danish = '';
+		status = fromEnglish ? 'Translating English to Danish…' : 'Translating Greenlandic to Danish…';
+		try {
+			if (fromEnglish) {
+				danish = await translateDanish(text);
+				status = 'Translating Danish to Greenlandic…';
+				greenlandic = await translateGreenlandicHybrid(danish, 'dan2kal');
+			} else {
+				danish = await translateGreenlandicHybrid(text, 'kal2dan');
+				status = 'Translating Danish to English…';
+				english = await translateDanish(danish);
+			}
+		} finally {
+			loading = false;
+			status = '';
 		}
 	}
 
 	/**
+	 * Legacy Nutserut translation.
 	 * @param {string} text
+	 * @param {'kal2dan' | 'dan2kal'} direction
 	 */
-	function translateGreenlandic(text) {
-		return fetch(
-			`https://nutserut.gl/callback.php?a=${fromEnglish ? 'dan2kal' : 'kal2qdx'}&t=${encodeURI(
-				text
-			)}`
-		)
+	// eslint-disable-next-line no-unused-vars
+	function translateGreenlandicClassic(text, direction) {
+		const action = direction === 'dan2kal' ? 'dan2kal' : 'kal2qdx';
+		return fetch(`https://nutserut.gl/callback.php?a=${action}&t=${encodeURIComponent(text)}`)
 			.then((r) => r.json())
 			.then((t) => {
-				if (fromEnglish) {
-					let withoutBreaks = t?.output.replace(/\n\n\n\n\n/gm, '');
-					console.log({ t, minimizeBreaks: withoutBreaks });
+				if (direction === 'dan2kal') {
+					let withoutBreaks = t?.output?.replace(/\n\n\n\n\n/gm, '');
 					return withoutBreaks;
-				} else if (!fromEnglish) {
-					return t?.moved;
+				} else {
+					return t?.moved ?? t?.output;
 				}
 			});
+	}
+
+	/**
+	 * Hybrid Nutserut translation.
+	 * @param {string} text
+	 * @param {'kal2dan' | 'dan2kal'} direction
+	 */
+	function translateGreenlandicHybrid(text, direction) {
+		const action = direction === 'dan2kal' ? 'm-dan2kal' : 'h-kal2dan';
+		return fetch(`https://nutserut.gl/callback.php?a=${action}&t=${encodeURIComponent(text)}`)
+			.then((r) => r.json())
+			.then((t) => t?.output);
 	}
 
 	/**
@@ -127,8 +154,24 @@
 			/>
 		</div>
 		<div id="controls">
-			<button on:click={() => translate(fromEnglish ? english : greenlandic)}>Translate</button>
-			<button class="subtle" on:click={switchLanguage}>Switch Language</button>
+			<button on:click={() => translate(fromEnglish ? english : greenlandic)} disabled={loading}>
+				Translate
+			</button>
+			<button class="subtle" on:click={switchLanguage} disabled={loading}>Switch Language</button>
+			{#if loading}
+				<span class="loading">{status}</span>
+			{/if}
+		</div>
+		<div id="danish">
+			<label for="danish-output">dansk (Danish)</label>
+			<textarea
+				bind:value={danish}
+				disabled
+				id="danish-output"
+				name="Danish"
+				rows="5"
+				spellcheck="false"
+			/>
 		</div>
 		<div id="english">
 			<label for="english-input">English</label>
@@ -140,7 +183,7 @@
 				rows="5"
 			/>
 		</div>
-		<button on:click={() => copy(fromEnglish ? greenlandic : english)}
+		<button id="copy" on:click={() => copy(fromEnglish ? greenlandic : english)}
 			>Copy Result to Clipboard</button
 		>
 	</section>
@@ -173,10 +216,11 @@
 	section {
 		display: grid;
 		grid-template-columns: 1fr;
-		grid-template-rows: 1fr auto 1fr;
+		grid-template-rows: 1fr auto 1fr 1fr auto;
 		grid-template-areas:
 			'input'
 			'controls'
+			'danish'
 			'result'
 			'copy';
 	}
@@ -190,12 +234,21 @@
 	#greenlandic {
 		grid-area: var(--greenlandic);
 	}
+	#danish {
+		grid-area: danish;
+	}
 	#english {
 		grid-area: var(--english);
+	}
+	#copy {
+		grid-area: copy;
 	}
 	button.subtle {
 		background-color: var(--text);
 		color: var(--bg);
 		opacity: 0.9;
+	}
+	.loading {
+		margin-left: 1em;
 	}
 </style>
