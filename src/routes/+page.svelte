@@ -31,10 +31,12 @@
 	function translate(text) {
 		if (fromEnglish) {
 			translateDanish(text).then((r) =>
-				translateGreenlandicClassic(r, 'dan2kal').then((r) => (greenlandic = r))
+				translateGreenlandicHybrid(r, 'dan2kal').then((r) => (greenlandic = r))
 			);
 		} else {
-			translateGreenlandicHybrid(text).then((r) => translateDanish(r).then((r) => (english = r)));
+			translateGreenlandicHybrid(text, 'kal2dan').then((r) =>
+				translateDanish(r).then((r) => (english = r))
+			);
 		}
 	}
 
@@ -43,6 +45,7 @@
 	 * @param {string} text
 	 * @param {'kal2dan' | 'dan2kal'} direction
 	 */
+	// eslint-disable-next-line no-unused-vars
 	function translateGreenlandicClassic(text, direction) {
 		const action = direction === 'dan2kal' ? 'dan2kal' : 'kal2qdx';
 		return fetch(`https://nutserut.gl/callback.php?a=${action}&t=${encodeURIComponent(text)}`)
@@ -58,11 +61,13 @@
 	}
 
 	/**
-	 * Hybrid Nutserut translation (Greenlandic to Danish).
+	 * Hybrid Nutserut translation.
 	 * @param {string} text
+	 * @param {'kal2dan' | 'dan2kal'} direction
 	 */
-	function translateGreenlandicHybrid(text) {
-		return fetch(`https://nutserut.gl/callback.php?a=h-kal2dan&t=${encodeURIComponent(text)}`)
+	function translateGreenlandicHybrid(text, direction) {
+		const action = direction === 'dan2kal' ? 'm-dan2kal' : 'h-kal2dan';
+		return fetch(`https://nutserut.gl/callback.php?a=${action}&t=${encodeURIComponent(text)}`)
 			.then((r) => r.json())
 			.then((t) => t?.output);
 	}
