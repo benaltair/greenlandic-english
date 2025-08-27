@@ -7,6 +7,7 @@
 	let greenlandic = '';
 
 	let fromEnglish = true;
+	let loading = false;
 
 	function switchLanguage() {
 		// Clear the input field
@@ -28,15 +29,18 @@
 	/**
 	 * @param {string} text
 	 */
-	function translate(text) {
-		if (fromEnglish) {
-			translateDanish(text).then((r) =>
-				translateGreenlandicHybrid(r, 'dan2kal').then((r) => (greenlandic = r))
-			);
-		} else {
-			translateGreenlandicHybrid(text, 'kal2dan').then((r) =>
-				translateDanish(r).then((r) => (english = r))
-			);
+	async function translate(text) {
+		loading = true;
+		try {
+			if (fromEnglish) {
+				const danish = await translateDanish(text);
+				greenlandic = await translateGreenlandicHybrid(danish, 'dan2kal');
+			} else {
+				const danish = await translateGreenlandicHybrid(text, 'kal2dan');
+				english = await translateDanish(danish);
+			}
+		} finally {
+			loading = false;
 		}
 	}
 
@@ -142,8 +146,13 @@
 			/>
 		</div>
 		<div id="controls">
-			<button on:click={() => translate(fromEnglish ? english : greenlandic)}>Translate</button>
-			<button class="subtle" on:click={switchLanguage}>Switch Language</button>
+			<button on:click={() => translate(fromEnglish ? english : greenlandic)} disabled={loading}>
+				Translate
+			</button>
+			<button class="subtle" on:click={switchLanguage} disabled={loading}>Switch Language</button>
+			{#if loading}
+				<span class="loading">Translating…</span>
+			{/if}
 		</div>
 		<div id="english">
 			<label for="english-input">English</label>
@@ -212,5 +221,8 @@
 		background-color: var(--text);
 		color: var(--bg);
 		opacity: 0.9;
+	}
+	.loading {
+		margin-left: 1em;
 	}
 </style>
